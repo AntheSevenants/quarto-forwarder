@@ -1,0 +1,10 @@
+DOCKER_CONTAINER_NAME="DOCKER_CONTAINER_NAME"
+QMD_DOCKER_PATH="/home/rstudio/YourProject/article.qmd"
+
+# First, we check whether a `quarto preview` instance is already running
+# I get the PID from the Docker container
+pid=$(docker exec $DOCKER_CONTAINER_NAME lsof -t -i:8788)
+# Then, I kill the process
+docker exec $DOCKER_CONTAINER_NAME kill -9 $pid
+# Now, let's forward the request to the Docker container 
+docker exec $DOCKER_CONTAINER_NAME quarto preview $QMD_DOCKER_PATH --host 0.0.0.0 --port 8788 --no-browser --no-watch-inputs
